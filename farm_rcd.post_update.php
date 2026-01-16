@@ -97,3 +97,16 @@ function farm_rcd_post_update_na_demographic_option(&$sandbox) {
   \Drupal::database()->query("DELETE FROM log__intake_stakeholder_group WHERE intake_stakeholder_group_value = 'na'");
   \Drupal::database()->query("DELETE FROM log_revision__intake_stakeholder_group WHERE intake_stakeholder_group_value = 'na'");
 }
+
+/**
+ * Add "other" demographic group field to intake log.
+ */
+function farm_rcd_post_update_intake_other_group(&$sandbox) {
+
+  $options = [
+    'type' => 'string',
+    'label' => t('Stakeholder group (other)'),
+  ];
+  $field_definition = \Drupal::service('farm_field.factory')->bundleFieldDefinition($options);
+  \Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition('intake_stakeholder_group_other', 'log', 'farm_rcd', $field_definition);
+}

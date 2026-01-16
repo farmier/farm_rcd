@@ -312,6 +312,21 @@ class IntakeForm extends FormBase {
       '#default_value' => $saved_values['personal']['group'] ?? [],
     ];
 
+    // Stakeholder group other field.
+    $form['personal']['group_other'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Specify other group'),
+      '#default_value' => $saved_values['personal']['group_other'] ?? '',
+      '#states' => [
+        'required' => [
+          ':input[name="stakeholder[personal][group][other]"]' => ['checked' => TRUE],
+        ],
+        'visible' => [
+          ':input[name="stakeholder[personal][group][other]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
     // Share with other RCDs.
     $form['personal']['share_rcds'] = [
       '#type' => 'radios',
@@ -874,6 +889,7 @@ class IntakeForm extends FormBase {
       'intake_stakeholder_state' => $saved_values['stakeholder']['personal']['address']['state'],
       'intake_stakeholder_zip' => $saved_values['stakeholder']['personal']['address']['zip'],
       'intake_stakeholder_group' => $intake_stakeholder_group,
+      'intake_stakeholder_group_other' => $saved_values['stakeholder']['personal']['group_other'],
       'intake_farm_name' => $saved_values['property']['info']['farm_name'],
       'intake_property_own_or_lease' => $saved_values['property']['info']['own_or_lease'],
       'intake_property_owner' => $saved_values['property']['info']['owner'],

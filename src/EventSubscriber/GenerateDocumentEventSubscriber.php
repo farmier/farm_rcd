@@ -91,7 +91,10 @@ class GenerateDocumentEventSubscriber implements EventSubscriberInterface {
       $intake_property_acreage = (string) ($intake->get('intake_property_acreage')->value + 0);
 
       // Disadvantaged groups.
-      $socially_disadvantaged = implode(', ', array_map(function ($value) {
+      $socially_disadvantaged = implode(', ', array_map(function ($value) use ($intake) {
+        if ($value['value'] == 'other') {
+          return 'Other: ' . $intake->get('intake_stakeholder_group_other')->value;
+        }
         return RcdOptionLists::stakeholderGroups()[$value['value']]->render();
       }, $intake->get('intake_stakeholder_group')->getValue()));
 

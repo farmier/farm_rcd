@@ -66,6 +66,10 @@ class Intake extends FarmLogType {
         'allowed_values' => RcdOptionLists::stakeholderGroups(),
         'multiple' => TRUE,
       ],
+      'intake_stakeholder_group_other' => [
+        'type' => 'string',
+        'label' => $this->t('Stakeholder group (other)'),
+      ],
 
       // Property information.
       'intake_farm_name' => [

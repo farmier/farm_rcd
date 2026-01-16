@@ -35,7 +35,9 @@ class RcdOptionLists {
   public static function stakeholderGroups() {
     return [
       'beginning' => t('Beginning farmer or rancher (less than 10 years)'),
+      'family' => t('Family farm'),
       'female' => t('Female'),
+      'lgbtq' => t('LGBTQ+'),
       'veteran' => t('Veteran'),
       'black' => t('Black or African American'),
       'native' => t('American Indian or Alaska Native'),
@@ -43,6 +45,7 @@ class RcdOptionLists {
       'asian' => t('Asian'),
       'pacific' => t('Pacific Islander'),
       'optout' => t('Prefer not to answer'),
+      'other' => t('Other'),
     ];
   }
 

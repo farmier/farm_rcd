@@ -107,9 +107,13 @@ class PracticeImplementation extends FarmPlanType {
 
       // Funding source.
       'rcd_funding_source' => [
-        'type' => 'string',
+        'type' => 'entity_reference',
         'label' => $this->t('Funding source'),
         'description' => $this->t('Describe where the funding for this practice came from.'),
+        'target_type' => 'taxonomy_term',
+        'target_bundle' => 'rcd_funding_source',
+        'multiple' => TRUE,
+        'auto_create' => TRUE,
       ],
 
     ];

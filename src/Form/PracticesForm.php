@@ -287,6 +287,27 @@ class PracticesForm extends PlanningWorkflowFormBase {
       '#default_value' => !$plan->get('rcd_target_end_date')->isEmpty() ? date('Y-m-d', (int) $plan->get('rcd_target_end_date')->value) : NULL,
     ];
 
+    // Funding source.
+    $form['funding_source'] = [
+      '#type' => 'entity_autocomplete_tagify',
+      '#title' => $this->t('Funding source'),
+      '#target_type' => 'taxonomy_term',
+      '#selection_handler' => 'default:taxonomy_term',
+      '#selection_settings' => [
+        'target_bundles' => ['rcd_funding_source'],
+        'sort' => [
+          'field' => 'name',
+          'direction' => 'asc',
+        ],
+      ],
+      '#autocreate' => TRUE,
+      // @see https://www.drupal.org/project/tagify/issues/3551805
+      '#attributes' => [
+        'class' => ['tagify--autocreate'],
+      ],
+      '#default_value' => $plan ? $plan->get('rcd_funding_source')->referencedEntities() : NULL,
+    ];
+
     // Overview (plan notes).
     $form['notes'] = [
       '#type' => 'textarea',
@@ -507,6 +528,36 @@ class PracticesForm extends PlanningWorkflowFormBase {
         $plan->set($field, $value);
         $changed = TRUE;
       }
+    }
+
+    // Process funding source taxonomy reference field.
+    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
+    $name = 'funding_source';
+    $vid = 'rcd_' . $name;
+    $existing_ids = array_map(function ($term) {
+      return $term->id();
+    }, $plan->get($vid)->referencedEntities()
+    );
+    $updated_terms = [];
+    $updated_ids = [];
+    if (!empty($values[$name])) {
+      $updated_terms = array_map(function ($value) use ($term_storage, $vid) {
+        if (!empty($value['entity_id'])) {
+          return $term_storage->load($value['entity_id']);
+        }
+        elseif (!empty($value['value'])) {
+          return $this->createOrLoadTerm($value['value'], $vid);
+        }
+        return NULL;
+      }, json_decode($values[$name], TRUE) ?? []);
+      $updated_ids = array_map(function ($term) {
+        return $term->id();
+      }, $updated_terms);
+    }
+    if (!(empty(array_diff($existing_ids, $updated_ids)) && empty(array_diff($updated_ids, $existing_ids)))) {
+      $plan->set($vid, []);
+      $plan->set($vid, $updated_terms);
+      $changed = TRUE;
     }
 
     // If the plan is new, populate the notes with a generic description of the

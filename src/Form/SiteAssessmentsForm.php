@@ -624,39 +624,4 @@ class SiteAssessmentsForm extends PlanningWorkflowFormBase {
     return NULL;
   }
 
-  /**
-   * Given a term name, create or load a matching term entity.
-   *
-   * @param string $name
-   *   The term name.
-   * @param string $vocabulary
-   *   The vocabulary to search or create in.
-   *
-   * @return \Drupal\taxonomy\TermInterface
-   *   The term entity that was created or loaded.
-   */
-  protected function createOrLoadTerm(string $name, string $vocabulary) {
-
-    // Get term entity storage.
-    $term_storage = $this->entityTypeManager->getStorage('taxonomy_term');
-
-    // First try to load an existing term.
-    /** @var \Drupal\taxonomy\TermInterface[] $search */
-    $search = $term_storage->loadByProperties(['name' => $name, 'vid' => $vocabulary]);
-    if (!empty($search)) {
-      $term = reset($search);
-    }
-
-    // Otherwise, create a new term.
-    else {
-      $term = $term_storage->create([
-        'name' => $name,
-        'vid' => $vocabulary,
-      ]);
-      $term->save();
-    }
-
-    return $term;
-  }
-
 }

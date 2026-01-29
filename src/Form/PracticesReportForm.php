@@ -185,13 +185,17 @@ class PracticesReportForm extends FormBase {
       if (!isset($context['results']['practices'])) {
         $context['results']['practices'] = [];
       }
-      if (!in_array($practice, $context['results']['practices'])) {
-        if ($practice == 'other' && !$plan->get('rcd_practice_other')->isEmpty()) {
-          $context['results']['practices'][] = $plan->get('rcd_practice_other')->value;
-        }
-        else {
-          $context['results']['practices'][] = ConservationPractices::get($practice)['label'];
-        }
+
+      // Get practice label to determine if it's already in the list.
+      if ($practice == 'other' && !$plan->get('rcd_practice_other')->isEmpty()) {
+        $practice_name = $plan->get('rcd_practice_other')->value;
+      }
+      else {
+        $practice_name = ConservationPractices::get($practice)['label'];
+      }
+
+      if (!in_array($practice_name, $context['results']['practices'])) {
+        $context['results']['practices'][] = $practice_name;
       }
     }
 

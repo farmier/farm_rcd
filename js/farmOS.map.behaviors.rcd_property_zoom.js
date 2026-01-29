@@ -30,7 +30,7 @@
             }
         },
 
-        // Make sure this runs after farmOS.map.behaviors.wkt.
-        weight: 101,
+        // Make sure this runs before farmOS.map.behaviors.wkt.
+        weight: 10,
     };
 })();

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- [Property layer renders on top of drawing layer in land use area maps #131](https://github.com/farmier/farm_rcd/issues/131)
+
 ## [1.3.0] 2026-01-28
 
 ### Added

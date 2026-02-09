@@ -37,6 +37,7 @@ class DocumentGeneratorTest extends KernelTestBase {
     'farm_rcd',
     'farm_rcd_test',
     'file',
+    'geofield',
     'log',
     'options',
     'organization',

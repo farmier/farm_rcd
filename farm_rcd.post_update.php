@@ -269,3 +269,15 @@ function farm_rcd_post_update_install_farm_report(&$sandbox = NULL) {
     \Drupal::service('module_installer')->install(['farm_report']);
   }
 }
+
+/**
+ * Add practice implementation geometry field.
+ */
+function farm_rcd_post_update_practice_implementation_geometry(&$sandbox) {
+  $options = [
+    'type' => 'geofield',
+    'label' => t('Geometry'),
+  ];
+  $field_definition = \Drupal::service('farm_field.factory')->bundleFieldDefinition($options);
+  \Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition('geometry', 'plan', 'farm_rcd', $field_definition);
+}

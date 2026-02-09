@@ -197,6 +197,26 @@ class PracticesForm extends PlanningWorkflowFormBase {
       ],
     ];
 
+    // Practice geometry.
+    $form['geometry'] = [
+      '#type' => 'farm_map_input',
+      '#title' => $this->t('Practice geometry'),
+      '#description' => $this->t('Draw the practice implementation geometry using the map below, or paste geometry data (WKT, KML, or GeoJSON) into the box below the map. The property boundary is visible in blue and the current land use area is visible in orange.'),
+      '#display_raw_geometry' => TRUE,
+      '#default_value' => $plan?->get('geometry')->value,
+      '#map_type' => 'rcd',
+      '#behaviors' => [
+        'rcd_property_zoom',
+      ],
+      '#map_settings' => [
+        'behaviors' => [
+          'rcd_property_zoom' => [
+            'property_geometry' => $this->property->get('geometry')->value,
+          ],
+        ],
+      ],
+    ];
+
     // Acreage/linear feet.
     // Conditionally show/hide based on the practice type. If "other" is
     // selected, then show both.
@@ -457,6 +477,7 @@ class PracticesForm extends PlanningWorkflowFormBase {
     $field_values = [
       'rcd_practice' => 'practice',
       'rcd_practice_other' => 'practice_other',
+      'geometry' => 'geometry',
       'rcd_acres' => 'acreage',
       'rcd_linear_feet' => 'linear_feet',
       'rcd_target_start_date' => 'target_start_date',

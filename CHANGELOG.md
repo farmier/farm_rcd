@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- [Add geometry to practice implementation plans #65](https://github.com/farmier/farm_rcd/issues/65)
+
 ### Changed
 
 - [Disable comment form when another form is used #141](https://github.com/farmier/farm_rcd/issues/141)

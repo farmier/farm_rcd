@@ -9,7 +9,7 @@ use Drupal\Tests\farm_test\Functional\FarmBrowserTestBase;
 /**
  * Base class for RCD functional tests.
  */
-class RcdTestBase extends FarmBrowserTestBase {
+abstract class RcdTestBase extends FarmBrowserTestBase {
 
   /**
    * Test user.

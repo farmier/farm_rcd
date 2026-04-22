@@ -9,7 +9,7 @@ use Drupal\Tests\farm_test\FunctionalJavascript\FarmWebDriverTestBase;
 /**
  * Base class for RCD functional Javascript tests.
  */
-class RcdTestBase extends FarmWebDriverTestBase {
+abstract class RcdTestBase extends FarmWebDriverTestBase {
 
   /**
    * Test user.

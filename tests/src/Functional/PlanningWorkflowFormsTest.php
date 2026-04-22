@@ -9,12 +9,14 @@ use Drupal\Tests\farm_rcd\Traits\PhpWordTestingTrait;
 use Drupal\farm_rcd\ConservationPractices;
 use Drupal\farm_rcd\RcdOptionLists;
 use Drupal\plan\Entity\PlanInterface;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
 
 /**
  * Tests the planning workflow forms.
  */
+#[RunTestsInSeparateProcesses]
 class PlanningWorkflowFormsTest extends RcdTestBase {
 
   use PhpWordTestingTrait;

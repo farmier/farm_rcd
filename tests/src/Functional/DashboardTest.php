@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\farm_rcd\Functional;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+
 /**
  * Tests the RCD dashboard functionality.
  */
+#[RunTestsInSeparateProcesses]
 class DashboardTest extends RcdTestBase {
 
   /**

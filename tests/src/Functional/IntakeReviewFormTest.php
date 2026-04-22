@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\farm_rcd\Functional;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+
 /**
  * Tests the intake review form.
  */
+#[RunTestsInSeparateProcesses]
 class IntakeReviewFormTest extends RcdTestBase {
 
   /**

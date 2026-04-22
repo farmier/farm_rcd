@@ -6,12 +6,14 @@ namespace Drupal\Tests\farm_rcd\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Field constraint tests for farmOS RCD module.
  *
  * @group farm
  */
+#[RunTestsInSeparateProcesses]
 class FieldConstraintsTest extends KernelTestBase {
 
   use UserCreationTrait;

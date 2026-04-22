@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\farm_rcd\Functional;
 
 use Drupal\farm_rcd\RcdOptionLists;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the intake form functionality.
  */
+#[RunTestsInSeparateProcesses]
 class IntakeFormTest extends RcdTestBase {
 
   /**

@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\farm_rcd\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+
 /**
  * Tests the practice report form.
  */
+#[RunTestsInSeparateProcesses]
 class PracticeReportFormTest extends RcdTestBase {
 
   /**

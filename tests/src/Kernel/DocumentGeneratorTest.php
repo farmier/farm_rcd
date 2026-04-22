@@ -6,11 +6,13 @@ namespace Drupal\Tests\farm_rcd\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\farm_rcd\Traits\PhpWordTestingTrait;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PhpOffice\PhpWord\IOFactory;
 
 /**
  * Tests for the document generator service.
  */
+#[RunTestsInSeparateProcesses]
 class DocumentGeneratorTest extends KernelTestBase {
 
   use PhpWordTestingTrait;

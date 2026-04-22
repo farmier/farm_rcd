@@ -197,13 +197,26 @@ class PracticesForm extends PlanningWorkflowFormBase {
       ],
     ];
 
+    // The rest of the form is only shown when editing an existing plan.
+    // This is primarily so that we can pre-populate the practice overview
+    // without using Ajax. We put most other fields behind this step for
+    // consistency.
+    if (is_null($plan)) {
+
+      // Add a description to the practice dropdown to explain this to the user.
+      $form['practice']['#description'] = $this->t('Select a practice and click "Save conservation practices" below. Additional details about the practice can be entered after saving.');
+
+      // Return the current state of the form.
+      return $form;
+    }
+
     // Practice geometry.
     $form['geometry'] = [
       '#type' => 'farm_map_input',
       '#title' => $this->t('Practice geometry'),
       '#description' => $this->t('Draw the practice implementation geometry using the map below, or paste geometry data (WKT, KML, or GeoJSON) into the box below the map. The property boundary is visible in blue and the current land use area is visible in orange.'),
       '#display_raw_geometry' => TRUE,
-      '#default_value' => $plan?->get('geometry')->value,
+      '#default_value' => $plan->get('geometry')->value,
       '#map_type' => 'rcd',
       '#behaviors' => [
         'rcd_property_zoom',
@@ -220,7 +233,7 @@ class PracticesForm extends PlanningWorkflowFormBase {
     // Acreage/linear feet.
     // Conditionally show/hide based on the practice type. If "other" is
     // selected, then show both.
-    $practice_name = !is_null($plan) ? 'practices[' . $plan->id() . '][practice]' : 'practices[add][practice]';
+    $practice_name = 'practices[' . $plan->id() . '][practice]';
     $area_practices = array_filter(ConservationPractices::definitions(), function ($practice) {
       return $practice['unit'] == 'ac';
     });
@@ -232,7 +245,7 @@ class PracticesForm extends PlanningWorkflowFormBase {
       '#title' => $this->t('Acreage'),
       '#min' => 0,
       '#step' => 0.1,
-      '#default_value' => $plan?->get('rcd_acres')->value,
+      '#default_value' => $plan->get('rcd_acres')->value,
       '#states' => [
         'visible' => [
           ':input[name="' . $practice_name . '"]' => array_merge(array_map(function ($key, $practice) {
@@ -246,7 +259,7 @@ class PracticesForm extends PlanningWorkflowFormBase {
       '#title' => $this->t('Linear feet'),
       '#min' => 0,
       '#step' => 0.1,
-      '#default_value' => $plan?->get('rcd_linear_feet')->value,
+      '#default_value' => $plan->get('rcd_linear_feet')->value,
       '#states' => [
         'visible' => [
           ':input[name="' . $practice_name . '"]' => array_merge(array_map(function ($key, $practice) {
@@ -255,13 +268,6 @@ class PracticesForm extends PlanningWorkflowFormBase {
         ],
       ],
     ];
-
-    // The rest of the form is only shown when editing an existing plan.
-    // This is primarily so that we can pre-populate the practice overview
-    // without using Ajax.
-    if (is_null($plan)) {
-      return $form;
-    }
 
     // Target implementation start date.
     $form['target_start_date'] = [

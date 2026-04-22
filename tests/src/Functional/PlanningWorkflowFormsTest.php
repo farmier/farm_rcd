@@ -709,13 +709,12 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextNotContains('Land use areas must be created before conservations practices can be added.');
     $this->assertSession()->pageTextContains('+ Add practice');
+    $this->assertSession()->pageTextContains('Select a practice and click "Save conservation practices" below. Additional details about the practice can be entered after saving.');
     $this->assertSession()->responseContains('Save conservation practices');
 
     // Fill in the form and submit it.
     $this->getSession()->getPage()->fillField('practices[add][location]', $location->id());
     $this->getSession()->getPage()->fillField('practices[add][practice]', 'hedgerow_planting');
-    $this->getSession()->getPage()->fillField('practices[add][acreage]', '');
-    $this->getSession()->getPage()->fillField('practices[add][linear_feet]', '100');
     $this->getSession()->getPage()->pressButton('Save conservation practices');
 
     // Confirm that a message was shown to the user.
@@ -737,7 +736,7 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
     $this->assertEquals('hedgerow_planting', $practice_plan->get('rcd_practice')->value);
     $this->assertTrue($practice_plan->get('geometry')->isEmpty());
     $this->assertTrue($practice_plan->get('rcd_acres')->isEmpty());
-    $this->assertEquals(100, $practice_plan->get('rcd_linear_feet')->value);
+    $this->assertTrue($practice_plan->get('rcd_linear_feet')->isEmpty());
     $expected_notes = 'Establishment of dense perennial vegetation in a linear design to achieve a conservation purpose. Hedgerows must retain sufficient vertical structure throughout the year to achieve the desired function. In all cases, the width of the hedgerow must be sufficient to achieve the stated purpose. This may necessitate the establishment of more than one row of plants.';
     $this->assertEquals($expected_notes, $practice_plan->get('notes')->value);
     $this->assertEquals('planning', $practice_plan->get('status')->value);
@@ -755,7 +754,7 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
     $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][practice]', 'hedgerow_planting');
     $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][geometry][value]', '');
     $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][acreage]', '');
-    $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][linear_feet]', '100.00');
+    $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][linear_feet]', '');
     $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][target_start_date]', '');
     $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][target_end_date]', '');
     $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][notes]', $expected_notes);
@@ -763,7 +762,7 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
 
     // Edit the practice plan's fields and submit the form.
     $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][geometry][value]', 'LINESTRING(-120 35,-120 36)');
-    $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][linear_feet]', '101.00');
+    $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][linear_feet]', '100.00');
     $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][target_start_date]', date('Y-m-d', strtotime('today')));
     $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][target_end_date]', date('Y-m-d', strtotime('tomorrow')));
     $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][notes]', 'Plant lots of tillage radish.');
@@ -782,7 +781,7 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
     $this->assertEquals('hedgerow_planting', $practice_plan->get('rcd_practice')->value);
     $this->assertEquals('LINESTRING(-120 35,-120 36)', $practice_plan->get('geometry')->value);
     $this->assertTrue($practice_plan->get('rcd_acres')->isEmpty());
-    $this->assertEquals(101, $practice_plan->get('rcd_linear_feet')->value);
+    $this->assertEquals(100, $practice_plan->get('rcd_linear_feet')->value);
     $this->assertEquals(strtotime(date('Y-m-d', strtotime('today'))), $practice_plan->get('rcd_target_start_date')->value);
     $this->assertEquals(strtotime(date('Y-m-d', strtotime('tomorrow'))), $practice_plan->get('rcd_target_end_date')->value);
     $this->assertEquals('Plant lots of tillage radish.', $practice_plan->get('notes')->value);

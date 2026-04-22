@@ -10,8 +10,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Field constraint tests for farmOS RCD module.
- *
- * @group farm
  */
 #[RunTestsInSeparateProcesses]
 class FieldConstraintsTest extends KernelTestBase {

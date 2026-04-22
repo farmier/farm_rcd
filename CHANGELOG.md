@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- [Disable comment form when another form is used #141](https://github.com/farmier/farm_rcd/issues/141)
+
 ### Fixed
 
 - [Property layer renders on top of drawing layer in land use area maps #131](https://github.com/farmier/farm_rcd/issues/131)

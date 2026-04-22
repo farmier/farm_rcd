@@ -114,6 +114,7 @@ class ThemeHooks implements ContainerInjectionInterface {
       'farm-rcd-document-form',
       'farm-rcd-document-email-form',
       'farm-rcd-status-form',
+      'comment-form',
     ];
     $build['#attached']['library'][] = 'farm_rcd/disable_forms';
   }

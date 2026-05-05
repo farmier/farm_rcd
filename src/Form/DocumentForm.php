@@ -106,7 +106,7 @@ class DocumentForm extends PlanningWorkflowFormBase {
     try {
 
       // Get the document template path.
-      $template_path = $this->moduleHandler->getModule('farm_rcd')->getPath() . '/templates/rcp-template.docx';
+      $template_path = $this->moduleHandler->getModule('farm_rcd')->getPath() . '/templates/default-rcp-template.docx';
 
       // Generate a filename.
       $filename = strtolower(trim(preg_replace('#\W+#', '-', $this->plan->label()), '-')) . '.docx';

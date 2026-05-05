@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [Add geometry to practice implementation plans #65](https://github.com/farmier/farm_rcd/issues/65)
+- [Expose funding source text field in practices form #144](https://github.com/farmier/farm_rcd/issues/144)
 
 ### Changed
 

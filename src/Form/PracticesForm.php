@@ -294,6 +294,13 @@ class PracticesForm extends PlanningWorkflowFormBase {
       '#default_value' => $plan->get('notes')->value,
     ];
 
+    // Funding source.
+    $form['funding_source'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Funding source'),
+      '#default_value' => $plan->get('rcd_funding_source')->value,
+    ];
+
     // Status.
     /** @var \Drupal\state_machine\Plugin\Field\FieldType\StateItem $state_item */
     $state_item = $plan->get('status')->first();
@@ -489,6 +496,7 @@ class PracticesForm extends PlanningWorkflowFormBase {
       'rcd_target_start_date' => 'target_start_date',
       'rcd_target_end_date' => 'target_end_date',
       'notes' => 'notes',
+      'rcd_funding_source' => 'funding_source',
       'status' => 'status',
     ];
     foreach ($field_values as $field => $name) {

@@ -741,6 +741,7 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
     $this->assertTrue($practice_plan->get('rcd_linear_feet')->isEmpty());
     $expected_notes = 'Establishment of dense perennial vegetation in a linear design to achieve a conservation purpose. Hedgerows must retain sufficient vertical structure throughout the year to achieve the desired function. In all cases, the width of the hedgerow must be sufficient to achieve the stated purpose. This may necessitate the establishment of more than one row of plants.';
     $this->assertEquals($expected_notes, $practice_plan->get('notes')->value);
+    $this->assertTrue($practice_plan->get('rcd_funding_source')->isEmpty());
     $this->assertEquals('planning', $practice_plan->get('status')->value);
 
     // Confirm that revision log messages were added to both.
@@ -760,6 +761,7 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
     $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][target_start_date]', '');
     $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][target_end_date]', '');
     $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][notes]', $expected_notes);
+    $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][funding_source]', '');
     $this->assertSession()->fieldValueEquals('practices[' . $practice_plan->id() . '][status]', 'planning');
 
     // Edit the practice plan's fields and submit the form.
@@ -768,6 +770,7 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
     $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][target_start_date]', date('Y-m-d', strtotime('today')));
     $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][target_end_date]', date('Y-m-d', strtotime('tomorrow')));
     $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][notes]', 'Plant lots of tillage radish.');
+    $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][funding_source]', 'Grant');
     $this->getSession()->getPage()->fillField('practices[' . $practice_plan->id() . '][status]', 'implementing');
     $this->getSession()->getPage()->pressButton('Save conservation practices');
     $this->assertSession()->pageTextContains('Practice implementation plans saved.');
@@ -787,6 +790,7 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
     $this->assertEquals(strtotime(date('Y-m-d', strtotime('today'))), $practice_plan->get('rcd_target_start_date')->value);
     $this->assertEquals(strtotime(date('Y-m-d', strtotime('tomorrow'))), $practice_plan->get('rcd_target_end_date')->value);
     $this->assertEquals('Plant lots of tillage radish.', $practice_plan->get('notes')->value);
+    $this->assertEquals('Grant', $practice_plan->get('rcd_funding_source')->value);
     $this->assertEquals('implementing', $practice_plan->get('status')->value);
 
     // Confirm that revision log messages were added to both.

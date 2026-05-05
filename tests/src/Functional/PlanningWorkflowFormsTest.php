@@ -59,6 +59,13 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = [
+    'farm_rcd_test',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   public function setUp(): void {
     parent::setUp();
 
@@ -1004,6 +1011,21 @@ class PlanningWorkflowFormsTest extends RcdTestBase {
     $this->getSession()->getPage()->attachFileToField('files[document]', $real_path);
     $this->getSession()->getpage()->pressButton('Save documents');
     $this->assertSession()->pageTextContains('Documents can only be uploaded to plans that are in the planning stage. This plan has been marked as done.');
+
+    // Test that the default RCP template file can be overridden.
+    $template_path = \Drupal::moduleHandler()->getModule('farm_rcd_test')->getPath() . '/templates/custom-rcp-template.docx';
+    \Drupal::configFactory()->getEditable('farm_rcd.settings')->set('rcp_template_path', $template_path)->save();
+    $this->drupalGet('/plan/' . $plan->id());
+    $this->assertSession()->statusCodeEquals(200);
+    $this->getSession()->getpage()->pressButton('Generate document from template');
+    $this->assertSession()->pageTextContains('Document created:');
+    /** @var \Drupal\file\FileInterface[] $files */
+    $files = $this->fileStorage->loadMultiple();
+    $this->assertCount(3, $files);
+    $file = end($files);
+    $real_path = \Drupal::service('stream_wrapper_manager')->getViaUri($file->getFileUri())->realpath();
+    $doc = IOFactory::load($real_path);
+    $this->assertDocContainsText($doc, 'Test custom template');
   }
 
   /**

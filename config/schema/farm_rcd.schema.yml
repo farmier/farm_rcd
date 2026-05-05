@@ -9,6 +9,10 @@ farm_rcd.settings:
     intake_email:
       type: email
       label: 'Intake notification email'
+    rcp_template_path:
+      type: string
+      label: 'RCP template path'
+      description: 'Path to RCP template.'
 farm_rcd.mail:
   type: config_object
   label: 'Email settings'

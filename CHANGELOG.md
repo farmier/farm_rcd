@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [Add geometry to practice implementation plans #65](https://github.com/farmier/farm_rcd/issues/65)
 - [Expose funding source text field in practices form #144](https://github.com/farmier/farm_rcd/issues/144)
+- [Allow overriding the default RCP template #91](https://github.com/farmier/farm_rcd/issues/91)
 
 ### Changed
 

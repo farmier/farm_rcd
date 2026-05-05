@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\farm_rcd\Form;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\AutowireTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -29,8 +30,10 @@ class DocumentForm extends PlanningWorkflowFormBase {
     protected DocumentGeneratorInterface $documentGenerator,
     protected FileSystemInterface $fileSystem,
     protected FileUrlGeneratorInterface $fileUrlGenerator,
+    ConfigFactoryInterface $configFactory,
   ) {
     parent::__construct($this->entityTypeManager);
+    $this->configFactory = $configFactory;
   }
 
   /**
@@ -106,7 +109,10 @@ class DocumentForm extends PlanningWorkflowFormBase {
     try {
 
       // Get the document template path.
-      $template_path = $this->moduleHandler->getModule('farm_rcd')->getPath() . '/templates/default-rcp-template.docx';
+      $template_path = $this->configFactory->get('farm_rcd.settings')->get('rcp_template_path');
+      if (empty($template_path)) {
+        $template_path = $this->moduleHandler->getModule('farm_rcd')->getPath() . '/templates/default-rcp-template.docx';
+      }
 
       // Generate a filename.
       $filename = strtolower(trim(preg_replace('#\W+#', '-', $this->plan->label()), '-')) . '.docx';

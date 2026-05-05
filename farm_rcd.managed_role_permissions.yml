@@ -1,0 +1,3 @@
+farm_rcd:
+  config_permissions:
+    - administer farm_rcd

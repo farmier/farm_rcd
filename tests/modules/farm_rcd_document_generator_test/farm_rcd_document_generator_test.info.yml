@@ -1,0 +1,7 @@
+name: RCD Testing Module
+description: Support module for RCD testing.
+type: module
+package: Testing
+core_version_requirement: ^11
+dependencies:
+  - farm_rcd:farm_rcd

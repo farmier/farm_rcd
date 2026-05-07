@@ -37,7 +37,7 @@ class DocumentGeneratorTest extends KernelTestBase {
     'farm_log',
     'farm_map',
     'farm_rcd',
-    'farm_rcd_test',
+    'farm_rcd_document_generator_test',
     'file',
     'geofield',
     'log',
@@ -60,7 +60,7 @@ class DocumentGeneratorTest extends KernelTestBase {
     $this->installEntitySchema('file');
     $this->installEntitySchema('plan');
     $this->installConfig([
-      'farm_rcd_test',
+      'farm_rcd_document_generator_test',
     ]);
     $this->documentGenerator = \Drupal::service('rcd.document.generator');
   }
@@ -71,7 +71,7 @@ class DocumentGeneratorTest extends KernelTestBase {
   public function testDocumentGenerator() {
 
     // Generate a document from the test template.
-    $template_path = \Drupal::moduleHandler()->getModule('farm_rcd_test')->getPath() . '/templates/template.docx';
+    $template_path = \Drupal::moduleHandler()->getModule('farm_rcd_document_generator_test')->getPath() . '/templates/template.docx';
     $filename = 'test-filename.docx';
     $file = $this->documentGenerator->generate($template_path, $filename);
     $default_schema = \Drupal::configFactory()->get('system.file')->get('default_scheme');

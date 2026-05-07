@@ -1,5 +1,0 @@
-services:
-  farm_rcd_test.generate_document_event_subscriber:
-    class: Drupal\farm_rcd_test\EventSubscriber\GenerateDocumentEventSubscriber
-    tags:
-      - { name: 'event_subscriber' }

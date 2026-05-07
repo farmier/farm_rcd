@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\farm_rcd_test\EventSubscriber;
+namespace Drupal\farm_rcd_document_generator_test\EventSubscriber;
 
 use Drupal\farm_rcd\Event\GenerateDocumentEvent;
 use Drupal\farm_rcd\Placeholder\ListBlockPlaceholder;

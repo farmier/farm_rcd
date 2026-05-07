@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\farm_rcd_test\Plugin\Plan\PlanType;
+namespace Drupal\farm_rcd_document_generator_test\Plugin\Plan\PlanType;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\farm_entity\Attribute\PlanType;

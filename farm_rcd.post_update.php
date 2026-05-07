@@ -7,9 +7,12 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Utility\UpdateException;
 use Drupal\farm_map\Entity\MapBehavior;
 use Drupal\farm_map\Entity\MapType;
 use Drupal\symfony_mailer_lite\Entity\Transport;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Add acreage and linear feet measurements to practice implementation plans.
@@ -280,4 +283,115 @@ function farm_rcd_post_update_practice_implementation_geometry(&$sandbox) {
   ];
   $field_definition = \Drupal::service('farm_field.factory')->bundleFieldDefinition($options);
   \Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition('geometry', 'plan', 'farm_rcd', $field_definition);
+}
+
+/**
+ * Add funding source taxonomy term vocabulary.
+ */
+function farm_rcd_post_update_create_funding_source_taxonomy(&$sandbox = NULL) {
+
+  // This function will be run as a batch operation to save the new term
+  // reference values on existing implementation plans. On the first run,
+  // we will make preparations. This logic should only run once.
+  if (!isset($sandbox['current_plan'])) {
+
+    // Query the database for all funding source field data on plans.
+    // Save it to $sandbox for future reference.
+    $sandbox['plan_map'] = \Drupal::database()->query('SELECT entity_id, rcd_funding_source_value FROM {plan__rcd_funding_source} WHERE deleted = 0')->fetchAllKeyed();
+
+    // Create the funding source vocabulary.
+    $vid = 'rcd_funding_source';
+    if (!Vocabulary::load($vid)) {
+      $vocab = Vocabulary::create([
+        'vid' => $vid,
+        'name' => 'Funding source',
+      ]);
+      $vocab->save();
+    }
+
+    // Create taxonomy terms for each of the funding sources.
+    // Add them to a term map in $sandbox for future reference.
+    $unique_sources = array_unique($sandbox['plan_map']);
+    $sandbox['term_map'] = [];
+    foreach ($unique_sources as $source) {
+      $term = Term::create(['vid' => 'rcd_funding_source', 'name' => $source]);
+      $term->save();
+      $sandbox['term_map'][$source] = $term->id();
+    }
+
+    // Get the Drupal entity definition update manager.
+    $update_manager = \Drupal::entityDefinitionUpdateManager();
+
+    // Delete the old funding source field.
+    $storage_definition = $update_manager->getFieldStorageDefinition('rcd_funding_source', 'plan');
+    $update_manager->uninstallFieldStorageDefinition($storage_definition);
+
+    // Install the new funding source field.
+    $options = [
+      'type' => 'entity_reference',
+      'label' => t('Funding source'),
+      'description' => t('Describe where the funding for this practice came from.'),
+      'target_type' => 'taxonomy_term',
+      'target_bundle' => 'rcd_funding_source',
+      'auto_create' => TRUE,
+      'weight' => [
+        'form' => -40,
+        'view' => -40,
+      ],
+    ];
+    $field_definition = \Drupal::service('farm_field.factory')->bundleFieldDefinition($options);
+    $update_manager->installFieldStorageDefinition('rcd_funding_source', 'plan', 'farm_rcd', $field_definition);
+
+    // If there are no implementation plans with funding source field
+    // values, bail.
+    if (empty($sandbox['plan_map'])) {
+      return NULL;
+    }
+
+    // Track progress.
+    $sandbox['current_plan'] = 0;
+    $sandbox['#finished'] = 0;
+  }
+
+  // Iterate over plans, 10 at a time.
+  $plan_ids = array_keys($sandbox['plan_map']);
+  $plan_count = count($plan_ids);
+  $end_plan = $sandbox['current_plan'] + 10;
+  $end_plan = $end_plan > $plan_count ? $plan_count : $end_plan;
+  for ($i = $sandbox['current_plan']; $i < $end_plan; $i++) {
+
+    // Iterate the global counter.
+    $sandbox['current_plan']++;
+
+    // Get the plan ID.
+    $id = $plan_ids[$i];
+
+    // If there is no taxonomy term to assign, skip.
+    if (empty($sandbox['plan_map'][$id]) || empty($sandbox['term_map'][$sandbox['plan_map'][$id]])) {
+      continue;
+    }
+
+    // Load the plan.
+    $plan = \Drupal::service('entity_type.manager')->getStorage('plan')->load($id);
+
+    // If the plan didn't load, throw an update exception.
+    if (empty($plan)) {
+      throw new UpdateException('Could not load plan. ID: ' . $id);
+    }
+
+    // Assign the new funding source taxonomy term.
+    $plan->set('rcd_funding_source', $sandbox['term_map'][$sandbox['plan_map'][$id]]);
+
+    // Save a new revision of the plan.
+    $plan->setNewRevision(TRUE);
+    $plan->setRevisionLogMessage(t('Automatically migrated funding source to taxonomy term in the new Funding Source vocabulary.')->render());
+    $plan->save();
+
+    // Declare that the plan has been fixed.
+    \Drupal::logger('farm_rcd')->notice(t('Plan @id funding source has been migrated.', ['@id' => $id]));
+  }
+
+  // Update progress.
+  $sandbox['#finished'] = $sandbox['current_plan'] / count($sandbox['plan_map']);
+  return NULL;
 }

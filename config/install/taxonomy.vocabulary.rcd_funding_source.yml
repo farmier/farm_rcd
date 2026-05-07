@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - farm_rcd
+name: 'Funding source'
+vid: rcd_funding_source
+description: null
+weight: 0
+new_revision: false
